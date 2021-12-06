@@ -16,6 +16,10 @@ td{
     height: 50px;
     background-color: #EEEEEE;
     text-align: center;
-    font-size: 2em;
-    
+    font-size: 2em;    
+}
+.fas {
+    width: 35px;
+    height: 35px;
+    text-shadow: 1px 1px 2px black;
 }

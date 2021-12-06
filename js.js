@@ -1,97 +1,306 @@
 "use strict";
 
-const settings ={
-    rowsCount: 10,
-    colsCount: 10,
-    startX: 0,
-    startY: 0,
-    blackCellColor: 'black',
-    nameCellY: ['1', '2', '3', '4', '5', '6', '7', '8'],
-    nameCellX: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
-};
-const createChessDesk = () =>{
-    const chessDesk = document.getElementById('chessDesk');
-   
-    let cellElements = [];
-    let playDesck = [];
-    
-    
-   
+/* Задание 1 Создать функцию, генерирующую шахматную доску. При этом можно использовать любые
+html-теги по своему желанию.
+Доска должна быть разлинована соответствующим образом, т.е. чередовать черные и белые
+ячейки.
+Строки должны нумероваться числами от 1 до 8, столбцы – латинскими буквами A, B, C, D, E, F,
+G, H.*/
 
-    for (let row = 0; row < settings.rowsCount; row++){
+const settings ={
+    rowsCount: 10, //общее количество строк
+    colsCount: 10, //общее количество колонок
+    blackCellColor: 'grey',  //цвет закрашенной ячейки
+    nameCellY: ['1', '2', '3', '4', '5', '6', '7', '8'], //обозначение строк
+    nameCellX: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], //обозначение колонок
+    playDesck: [], //отдельный массив для игрового поля, без названий сетки
+};
+const createChessDesk = () =>{  //создаем игровое поле
+    const chessDesk = document.getElementById('chessDesk'); //получаем таблицу
+    let cellElements = []; //записываем все ячейки в общий массив
+
+    for (let row = 0; row < settings.rowsCount; row++){ //создаем строки
     const trElem = document.createElement('tr');   
     chessDesk.appendChild(trElem);
 
-      for(let col = 0; col < settings.colsCount; col++){
+      for(let col = 0; col < settings.colsCount; col++){ //создаем ячейки
           const cell = document.createElement('td');
-          cellElements.push(cell);
-          trElem.appendChild(cell);
-            
+          cellElements.push(cell); //записываем каждую ячейку в общий массив
+          trElem.appendChild(cell);   
         };
-    };
-    console.log(cellElements);
-    
+    };    
 
     for (let i = 11; i < cellElements.length - 10; i++){
         if(i % 10 !== 0){
             if (i % 10 < 9){
                const playCell = cellElements[i];
-               playDesck.push(playCell);
+               settings.playDesck.push(playCell); //записываем игровое поле
             };  
         };     
     };
-    console.log(playDesck);
-    
-    for (let j = 1; j < 61; j++){
-        playDesck[j].style.backgroundColor = 'black';
+       
+    for (let j = 1; j < 61; j++){ //красим игровое поле
+        settings.playDesck[j].style.backgroundColor = settings.blackCellColor; //записываем цикл покраски первых двух строк
         j = j + 2;
-        playDesck[j].style.backgroundColor = 'black';
+        settings.playDesck[j].style.backgroundColor = settings.blackCellColor; //остальные строки красятся так же
         j = j + 2;
-        playDesck[j].style.backgroundColor = 'black';
+        settings.playDesck[j].style.backgroundColor = settings.blackCellColor;
         j = j + 2;
-        playDesck[j].style.backgroundColor = 'black';
+        settings.playDesck[j].style.backgroundColor = settings.blackCellColor;
         j = j + 1;   
-        playDesck[j].style.backgroundColor = 'black'; 
+        settings.playDesck[j].style.backgroundColor = settings.blackCellColor; 
         j = j + 2;
-        playDesck[j].style.backgroundColor = 'black';
+        settings.playDesck[j].style.backgroundColor = settings.blackCellColor;
         j = j + 2;
-        playDesck[j].style.backgroundColor = 'black';
+        settings.playDesck[j].style.backgroundColor = settings.blackCellColor;
         j = j + 2;
-        playDesck[j].style.backgroundColor = 'black';
+        settings.playDesck[j].style.backgroundColor = settings.blackCellColor;
         j = j + 2;
     };
     
-   
 };
 createChessDesk();
 
+const getNameCell = () =>{ //подписываем строки и столбцы
+    for (let x = 1; x < settings.rowsCount; x++) {
+        const cellX = document.querySelectorAll('td');
+        cellX[x].textContent = settings.nameCellX[x - 1];
+        cellX[x + settings.rowsCount * settings.colsCount - settings.rowsCount].textContent = settings.nameCellX[x - 1];
 
-const getNameCell = () =>{
-for (let x = 1; x < settings.rowsCount; x++) {
-    const cellX = document.querySelectorAll('td');
-    cellX[x].textContent = settings.nameCellX[x - 1];
-    cellX[x + settings.rowsCount * settings.colsCount - settings.rowsCount].textContent = settings.nameCellX[x - 1];
-
-    for (let y = 1; y < settings.colsCount; y++) {
-         const cellY = document.querySelectorAll('tr > td:first-child');
-         cellY[y].textContent = settings.nameCellY[y - 1];
-         const cellYend = document.querySelectorAll('tr > td:last-child');
-         cellYend[y].textContent = settings.nameCellY[y - 1];
-    };   
-};
+        for (let y = 1; y < settings.colsCount; y++) {
+             const cellY = document.querySelectorAll('tr > td:first-child');
+             cellY[y].textContent = settings.nameCellY[y - 1];
+             const cellYend = document.querySelectorAll('tr > td:last-child');
+             cellYend[y].textContent = settings.nameCellY[y - 1];
+        };   
+    };
 };
 getNameCell();
-/*
-const getCellColorBlack = () =>{
-for (let f = 1; f < settings.rowsCount - 1; f++){
 
-}
+/* Задание 2*. Заполнить созданную таблицу фигурами, фигуры должны выглядеть как картинки, либо
+можно использовать символы (существуют символы шахматных фигур) причем все фигуры
+должны стоять на своих местах и быть соответственно черными и белыми.*/
 
-    const playDesck = document.querySelectorAll('td');
+const figures = [  //данные всех фигур на доске
+    {
+        name: 'king black', //название фигуры
+        viev: '<i class="fas fa-chess-king"></i>',//ссылка на иконку с фигурой
+        color: 'black', //цвет фигуры
+        position: ['E8'], //начальная позиция
+    },
+    {
+        name: 'king white',
+        viev: '<i class="fas fa-chess-king"></i>',
+        color: 'white',
+        position: ['E1'],
+    },
+    {
+        name: 'qween black',
+        viev: '<i class="fas fa-chess-queen"></i>',
+        color: 'black',
+        position: ['D8'],
+    },
+    {
+        name: 'qween white',
+        viev: '<i class="fas fa-chess-queen"></i>',
+        color: 'white',
+        position: ['D1'],
+    },
+    {
+        name: 'khight black 1',
+        viev: '<i class="fas fa-chess-knight"></i>',
+        color: 'black',
+        position: ['B8'],
+    },
+    {
+        name: 'khight black 2',
+        viev: '<i class="fas fa-chess-knight"></i>',
+        color: 'black',
+        position: ['G8'],
+    },
+    {
+        name: 'khight white 1',
+        viev: '<i class="fas fa-chess-knight"></i>',
+        color: 'white',
+        position: ['B1'],
+    },
+    {
+        name: 'khight white 2',
+        viev: '<i class="fas fa-chess-knight"></i>',
+        color: 'white',
+        position: ['G1'],
+    },
+    {
+        name: 'rook black 1',
+        viev: '<i class="fas fa-chess-rook"></i>',
+        color: 'black',
+        position: ['A8'],
+    },
+    {
+        name: 'rook black 2',
+        viev: '<i class="fas fa-chess-rook"></i>',
+        color: 'black',
+        position: ['H8'],
+    },
+    {
+        name: 'rook white 1',
+        viev: '<i class="fas fa-chess-rook"></i>',
+        color: 'white',
+        position: ['A1'],
+    },
+    {
+        name: 'rook white 2',
+        viev: '<i class="fas fa-chess-rook"></i>',
+        color: 'white',
+        position: ['H1'],
+    },
+    {
+        name: 'bishop black 1',
+        viev: '<i class="fas fa-chess-bishop"></i>',
+        color: 'black',
+        position: ['C8'],
+    },
+    {
+        name: 'bishop black 2',
+        viev: '<i class="fas fa-chess-bishop"></i>',
+        color: 'black',
+        position: ['F8'],
+    },
+    {
+        name: 'bishop white 1',
+        viev: '<i class="fas fa-chess-bishop"></i>',
+        color: 'white',
+        position: ['C1'],
+    },
+    {
+        name: 'bishop white 2',
+        viev: '<i class="fas fa-chess-bishop"></i>',
+        color: 'white',
+        position: ['F1'],
+    },
+    {
+        name: 'pawn black 1',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'black',
+        position: ['A7'],
+    },
+    {
+        name: 'pawn black 2',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'black',
+        position: ['B7'],
+    },
+    {
+        name: 'pawn black 3',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'black',
+        position: ['C7'],
+    },
+    {
+        name: 'pawn black 4',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'black',
+        position: ['D7'],
+    },
+    {
+        name: 'pawn black 5',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'black',
+        position: ['E7'],
+    },
+    {
+        name: 'pawn black 6',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'black',
+        position: ['F7'],
+    },
+    {
+        name: 'pawn black 7',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'black',
+        position: ['G7'],
+    },
+    {
+        name: 'pawn black 8',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'black',
+        position: ['H7'],
+    },
+    {
+        name: 'pawn white 1',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'white',
+        position: ['A2'],
+    },
+    {
+        name: 'pawn white 2',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'white',
+        position: ['B2'],
+    },
+    {
+        name: 'pawn white 3',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'white',
+        position: ['C2'],
+    },
+    {
+        name: 'pawn white 4',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'white',
+        position: ['D2'],
+    },
+    {
+        name: 'pawn white 5',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'white',
+        position: ['E2'],
+    },
+    {
+        name: 'pawn white 6',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'white',
+        position: ['F2'],
+    },
+    {
+        name: 'pawn white 7',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'white',
+        position: ['G2'],
+    },
+    {
+        name: 'pawn white 8',
+        viev: '<i class="fas fa-chess-pawn"></i>',
+        color: 'white',
+        position: ['H2'],
+    }
+];
 
-    cellElements[i].style.backgroundColor = 'black'; 
-      
+const getChess = () =>{ //определяем координаты каждой ячейки на доске, присваеваем data-атрибут с этим адресом
+    const desck = settings.playDesck;
+    
+    for(let j = 0 ; j < settings.nameCellX.length; j++){
+        const letter = settings.nameCellX[j];
+        for(let i = j, num = 1; i < desck.length; i++, num++){
+           desck[i].classList.add(`${letter}` + `${num}`); 
+           i = i + 7;  
+        };     
+    };  
+};
+getChess();
+
+const renderFigures = () =>{ //расставляем фигур на доске
+    const chessDesk = document.getElementById('chessDesk'); //получаем игровую доску
+    for (let i = 0; i < figures.length; i++) { //перебираем каждую фигуру 
+        const figure = figures[i]; //получаем все свойства фигуры
+        const figureColor = figure.color; //получаем цвет фигуры
+        const figureCode = figure.viev; //получаем иконку с фигурой     
+        const figurePosition = figure.position; //начальная позиция фигуры на доске
+        const startPosition = chessDesk.getElementsByClassName(figurePosition[0]);//получаем элемент в который надо поставить иконку фигуры
+        const myI = document.createElement('div');//создаем тэг для иконки
+        myI.innerHTML = figureCode;//вносим иконку
+        myI.style.color = figureColor;//определяем цвет иконки
+        startPosition[0].appendChild(myI);//переносим иконку в HTML    
     };
-
-getCellColorBlack();
-*/
+};
+renderFigures();
