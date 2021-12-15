@@ -23,3 +23,48 @@ td{
     height: 35px;
     text-shadow: 1px 1px 2px black;
 }
+#formBlock{
+    margin: auto;
+    padding: 20px;
+    max-width: 800px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    
+}
+#form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+h3{
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    color: slategrey;
+    
+}
+input{
+    margin: 20px;
+    padding: 5px;
+}
+#button{
+    background-color: rgb(180, 218, 240);
+}
+#button:hover{
+    cursor: pointer;
+    color: rgb(84, 84, 143);
+    background-color: rgb(224, 214, 196);
+}
+.error{
+    display: block;
+    color: red;
+    text-align: center;
+    min-width: 500px;
+    height: 20px;
+}
+.invalid{
+    border-color: red;
+    color: red;
+}

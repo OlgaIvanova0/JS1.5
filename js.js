@@ -30,7 +30,7 @@ const createChessDesk = () =>{  //создаем игровое поле
         };
     };    
 
-    for (let i = 11; i < cellElements.length - 10; i++){
+    for (let i = 11; i < cellElements.length - 10; i++){ //цикл для выделения игровых клеток из общей таблицы
         if(i % 10 !== 0){
             if (i % 10 < 9){
                const playCell = cellElements[i];
@@ -304,3 +304,137 @@ const renderFigures = () =>{ //расставляем фигур на доске
     };
 };
 renderFigures();
+
+/* Задание 3**. Создать форму в html со следующими полями:
+* Имя - текстовое поле
+* Телефон - текстовое поле
+* Пароль - поле типа password
+* Повтор пароля - поле типа password
+* Кнопка отправить форму
+
+Необходимо реализовать валидацию этой формы по следующим правилам:
+* Имя - должно содержать как минимум 1 символ, не более 50 символов.
+* Телефон - должно содержать 11 цифр, не больше, не меньше.
+* Пароль - минимум 5 символов, максимум 50
+* Повтор пароля - значение должно совпадать с полем пароль.
+* Кнопка отправить форму - при нажатии на кнопку форма должна провериться, при
+прохождении проверки, форма
+отправляется, если проверка не была пройдена, то:
+- Каждое поле, которое не прошло проверку должно выделяться красным цветом.
+- Под каждым полем, что не прошло проверку, должна писаться подсказка по какой причине
+проверка провалилась.
+
+Пользоваться аттрибутами HTML5 запрещено, необходимо проверки реализовать с помощью
+javascript.*/
+
+let form = document.getElementById('form'); //находим форму
+let text = form.elements.text; //находим поле для имени
+let phone = form.elements.phone; //находим поле для номера телефона
+let passOne = form.elements.passwordOne; //находим поле с паролем
+let passSec = form.elements.passwordSecond;//находим поле с повтором пароля
+let button = form.elements.button;//находим кнопку отправить
+
+for (let i = 0; i < form.length - 1; i++){
+    const errorDiv = document.createElement('div'); //создаем пустой контейнер для вывода текста ошибки
+    errorDiv.textContent = ''; //оставляем его пустым
+    form.appendChild(errorDiv);
+    form.insertBefore(errorDiv, form[i + 1]);//ставим по пустому контейнеру после каждого поля для ввода
+    errorDiv.classList.add('error');   
+};
+
+const errorDiv = document.getElementsByClassName('error'); //находим все контейнеры для ошибок
+let inputNumber = null; //номер текущего поля для ввода
+let textError; //текст ошибки 
+
+const errorShow = inputNumber =>{ //выдает текст ошибки
+    form[inputNumber].classList.add('invalid');
+    errorDiv[inputNumber].textContent = `${textError}`;
+};
+
+const deleteError = inputNumber =>{ //очищает поле с ошибкой для повторного заполнения 
+    form[inputNumber].classList.remove('invalid');
+    errorDiv[inputNumber].textContent = '';
+};
+
+const checkInputText = () => { //проверяем поле для ввода имени
+    if(Number(+text.value)){
+        textError = 'Имя должно содержать только буквы!';  
+        errorShow(0);   
+    } else if (text.value.length > 50){
+        textError = 'Имя не должно быть длиннее 50 символов!';
+        errorShow(0); 
+    } else if (text.value.length < 1){
+        textError = 'Имя не может быть короче 1 буквы!';
+        errorShow(0); 
+    };
+
+    for (let i = 0; i < text.value.length; i++){ //проверяем каждый символ в имени, чтобы не было цифр
+        const letter = text.value[i];
+        if (!Number.isNaN(+letter)){
+            textError = 'Имя должно содержать только буквы!';
+            errorShow(0); 
+        };  
+     };
+    
+    text.onfocus = () =>{ //очищаем поле с ошибкой, чтобы заполнить заново
+        deleteError(0);
+    };
+};
+
+const checkInputPhone = () =>{ //проверяем телефонный номер
+    if(Number.isNaN(+phone.value)){  
+        textError = 'Номер телефона должен содержать только цифры!';
+        errorShow(1);   
+    } else if (phone.value.length < 11){
+        textError = 'Номер телефона не может содержать меньше 11 цифр!';
+        errorShow(1); 
+    } else if (phone.value.length > 11) {
+        textError = 'Номер телефона не может содержать больше 11 цифр!';
+        errorShow(1); 
+    };
+    phone.onfocus = () =>{//очищаем поле с ошибкой, чтобы заполнить заново
+        deleteError(1);
+    };
+};
+
+const checkInputPassword = () =>{ //проверяем пароль
+    if(passOne.value.length < 5){
+        textError = 'Пароль должен содержать не меньше 5 символов!';
+        errorShow(2);   
+    } else if (passOne.value.length > 50){
+        textError = 'Пароль должен содержать не больше 50 символов!';
+        errorShow(2);  
+    }; 
+
+    passOne.onfocus = () =>{//очищаем поле с ошибкой, чтобы заполнить заново
+        deleteError(2);
+    };
+};
+
+const checkInputRepeatPassword = () =>{ //сравниваем пароли
+    if(passSec.value !== passOne.value){
+        textError = 'Пароли не совпадают!';
+        errorShow(3);   
+    }; 
+
+    passSec.onfocus = () =>{//очищаем поле с ошибкой, чтобы заполнить заново
+        deleteError(3);
+    };
+};
+
+button.onclick = () =>{ //при клике на кнопку отправить запускаем проверку всех полей формы
+    checkInputText();//проверяем имя
+    checkInputPhone();//проверяем телефон
+    checkInputPassword();//проверяем пароль
+    checkInputRepeatPassword();//проверяем повтор пароля
+    for (let i = 0; i < errorDiv.length; i++) { // если нет сообщений об ошибке - отправляем форму, если есть - заполняем заново
+        if (errorDiv[i].textContent !== ''){
+            alert('Заполните форму заново');
+            break;
+        } else {
+            return alert('Ваша форма отправлена');
+        };
+    };
+};
+
+
